@@ -20,6 +20,15 @@
         mode: '0644'
         force: yes
 
+    - name: Replace /etc/defaultdomain with managed copy
+      copy:
+        src: files/defaultdomain
+        dest: /etc/defaultdomain
+        owner: root
+        group: root
+        mode: '0644'
+        force: yes
+
 
     - name: Restart ypbind and autofs services
       service:
