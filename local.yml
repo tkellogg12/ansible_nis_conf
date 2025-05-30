@@ -11,3 +11,12 @@
         group: root
         mode: '0644'
         force: yes
+    - name: Replace /etc/yp.conf with managed copy
+      copy:
+        src: files/yp.conf
+        dest: /etc/yp.conf
+        owner: root
+        group: root
+        mode: '0644'
+        force: yes
+
