@@ -20,3 +20,14 @@
         mode: '0644'
         force: yes
 
+
+    - name: Restart ypbind and autofs services
+      service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+      loop:
+        - ypbind
+        - autofs
+
+
