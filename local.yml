@@ -1,0 +1,13 @@
+---
+- name: Overwrite /etc/nsswitch.conf
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Replace /etc/nsswitch.conf with managed copy
+      copy:
+        src: files/nsswitch.conf
+        dest: /etc/nsswitch.conf
+        owner: root
+        group: root
+        mode: '0644'
+        force: yes
