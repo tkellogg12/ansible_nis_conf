@@ -1,5 +1,5 @@
 - name: Install packages on SUSE family
-  community.general.zypper:
+  zypper:
     name:
       - ypbind
       - autofs
