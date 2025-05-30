@@ -23,7 +23,7 @@
           - autofs
         state: present
         update_cache: true
-      when: ansible_facts['os_family'] == "Ubuntu"
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Install packages on SUSE family
       zypper:
