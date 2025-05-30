@@ -1,9 +1,41 @@
 ---
-- name: Overwrite /etc/nsswitch.conf
+- name: Install and configure NIS (ypbind) and autofs
   hosts: localhost
-  become: yes
+  become: true
+  gather_facts: yes
+
   tasks:
-    - name: Replace /etc/nsswitch.conf with managed copy
+
+    # --- PACKAGE INSTALLATION BASED ON OS FAMILY ---
+
+    - name: Install packages on RedHat family
+      package:
+        name:
+          - ypbind
+          - autofs
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install packages on Debian family
+      apt:
+        name:
+          - nis
+          - autofs
+        state: present
+        update_cache: true
+      when: ansible_facts['os_family'] == "Ubuntu"
+
+    - name: Install packages on SUSE family
+      zypper:
+        name:
+          - ypbind
+          - autofs
+        state: present
+      when: ansible_facts['os_family'] == "Suse"
+
+    # --- MANAGED CONFIGURATION FILES ---
+
+    - name: Deploy /etc/nsswitch.conf
       copy:
         src: files/nsswitch.conf
         dest: /etc/nsswitch.conf
@@ -11,7 +43,8 @@
         group: root
         mode: '0644'
         force: yes
-    - name: Replace /etc/yp.conf with managed copy
+
+    - name: Deploy /etc/yp.conf
       copy:
         src: files/yp.conf
         dest: /etc/yp.conf
@@ -20,7 +53,7 @@
         mode: '0644'
         force: yes
 
-    - name: Replace /etc/defaultdomain with managed copy
+    - name: Deploy /etc/defaultdomain
       copy:
         src: files/defaultdomain
         dest: /etc/defaultdomain
@@ -29,8 +62,9 @@
         mode: '0644'
         force: yes
 
+    # --- RESTART AND ENABLE SERVICES ---
 
-    - name: Restart ypbind and autofs services
+    - name: Restart and enable ypbind and autofs
       service:
         name: "{{ item }}"
         state: restarted
@@ -38,5 +72,3 @@
       loop:
         - ypbind
         - autofs
-
-
