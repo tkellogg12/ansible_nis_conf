@@ -25,14 +25,10 @@
         update_cache: true
       when: ansible_facts['os_family'] == "Debian"
 
-    - block:
-      - name: Install packages on SUSE family
-        community.general.zypper:
-          name:
-            - ypbind
-            - autofs
-          state: present
+    - name: Include SUSE-specific tasks
+      include_tasks: suse-packages.yml
       when: ansible_facts['os_family'] == "SUSE"
+
 
 
     # --- MANAGED CONFIGURATION FILES ---
